@@ -1,0 +1,9 @@
+{
+  "name": "capstone-project-dsa",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/sorting.test.js test/eventSearch.test.js test/inventory.test.js"
+  }
+}
