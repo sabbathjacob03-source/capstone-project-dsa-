@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test test/sorting.test.js test/eventSearch.test.js test/inventory.test.js"
+    "start": "node src/server.js",
+    "test": "node --test test/sorting.test.js test/eventSearch.test.js test/inventory.test.js test/bookingStateMachine.test.js test/router.test.js test/httpApp.test.js"
   }
 }

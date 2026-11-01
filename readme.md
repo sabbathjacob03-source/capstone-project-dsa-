@@ -23,7 +23,15 @@ From the project root, run the tests:
 npm test
 ```
 
-The test command runs the sorting, event-search, and inventory tests in `test/`.
+To start the current HTTP server, run:
+
+```powershell
+npm start
+```
+
+The server listens on port `3000` by default. Set the `PORT` environment
+variable to use another valid port. The health endpoint is available at
+`http://localhost:3000/health`.
 
 ## Current features
 
@@ -32,6 +40,7 @@ The test command runs the sorting, event-search, and inventory tests in `test/`.
   availability.
 - Event sorting by date, cheapest price, or remaining seats.
 - Publishing events and listing summaries while hiding drafts by default.
+- A booking state machine and a minimal Node HTTP server with a health route.
 - Automated tests using `node:test` and `node:assert/strict`.
 
 ## Build roadmap
@@ -56,15 +65,17 @@ The capstone is organized as nine milestones:
    protections, and automated checks.
 
 See [all-builds.md](./all-builds.md) for the high-level roadmap,
-[build-1.md](./build-1.md) for the first milestone, and
-[build-2.md](./build-2.md) for the current search and sorting milestone.
+[build-1.md](./build-1.md) for Build 1, [build-2.md](./build-2.md) for Build 2,
+and [docs/architecture.md](./docs/architecture.md) for the Build 3 design.
 
 ## Project layout
 
 ```text
-src/domain/  Domain errors, event summaries, search, and sorting
+src/domain/  Domain errors, event summaries, search, sorting, and state rules
+src/http/    HTTP router and app
+public/      Static files served by the HTTP app
 test/        Automated tests
-docs/        Additional project documentation as it is added
+docs/        Architecture and project documentation
 ```
 
 ## Development notes
