@@ -32,6 +32,14 @@ function statusFor(error) {
     if (error.code === 'VALIDATION' || error.code === 'INVALID_JSON') return 400;
     if (error.code === 'NOT_FOUND') return 404;
     if (error.code === 'PAYLOAD_TOO_LARGE') return 413;
+    if (error.code === 'UNAUTHENTICATED') return 401;
+    if (error.code === 'FORBIDDEN') return 403;
+    if (error.code === 'PAYMENT_DECLINED') return 402;
+    if (
+      error.code === 'SOLD_OUT' ||
+      error.code === 'INVALID_STATE' ||
+      error.code === 'INVALID_TRANSITION'
+    ) return 409;
   }
   return 500;
 }

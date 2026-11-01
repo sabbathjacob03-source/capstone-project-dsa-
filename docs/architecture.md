@@ -8,13 +8,15 @@ flowchart TD
   Routes --> Services
   Services --> DomainRules
   Services --> Repositories
+  Services --> PaymentGateway
   Repositories --> Database
 ```
 
 - **Routes** may interpret HTTP input, call services, and format responses; they
   may not implement business rules or access persistence directly.
 - **Services** may coordinate domain rules and repositories; they may not
-  depend on HTTP request/response details or call routes.
+  depend on HTTP request/response details or call routes. External integrations,
+  such as the payment gateway, are accessed through service dependencies.
 - **Domain rules** may validate and apply business decisions; they may not
   perform I/O or depend on services, repositories, or routes.
 - **Repositories** may read and write persistence; they may not implement

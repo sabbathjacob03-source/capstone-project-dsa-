@@ -40,7 +40,7 @@ variable to use another valid port. The health endpoint is available at
   availability.
 - Event sorting by date, cheapest price, or remaining seats.
 - Publishing events and listing summaries while hiding drafts by default.
-- A booking state machine and a minimal Node HTTP server with a health route.
+- A booking state machine and a Node HTTP server with an in-memory REST API.
 - Automated tests using `node:test` and `node:assert/strict`.
 
 ## Build roadmap
@@ -53,7 +53,8 @@ The capstone is organized as nine milestones:
    automated tests.
 3. **Architecture and server skeleton:** layered design, booking state machine,
    and initial HTTP server.
-4. **In-memory REST API:** event and booking operations over HTTP.
+4. **In-memory REST API:** event and booking operations over HTTP. See
+   [API examples](./docs/api-examples.md).
 5. **SQLite and overselling prevention:** persistence and atomic capacity
    updates.
 6. **Frontend:** event browsing and mock checkout.
@@ -71,8 +72,11 @@ and [docs/architecture.md](./docs/architecture.md) for the Build 3 design.
 ## Project layout
 
 ```text
-src/domain/  Domain errors, event summaries, search, sorting, and state rules
-src/http/    HTTP router and app
+src/domain/      Domain errors, event summaries, search, sorting, state rules
+src/repositories/ In-memory persistence adapters
+src/services/    Event and booking workflows
+src/http/        HTTP router, app, and API routes
+src/lib/         Mock integrations such as payment
 public/      Static files served by the HTTP app
 test/        Automated tests
 docs/        Architecture and project documentation
