@@ -43,13 +43,6 @@ export async function bookTickets(repository, userId, input) {
       `Quantity must be a whole number from 1 to ${MAX_TICKETS_PER_BOOKING}`,
     );
   }
-  const seatsLeft = tier.capacity - tier.sold;
-  if (seatsLeft < quantity) {
-    throw new DomainError('SOLD_OUT', `Only ${seatsLeft} ticket(s) left in ${tier.name}`, {
-      seatsLeft,
-    });
-  }
-
   const amountCents = tier.priceCents * quantity;
   if (!Number.isSafeInteger(amountCents)) {
     throw new DomainError('VALIDATION', 'Booking amount must be a safe whole number of cents');
@@ -70,11 +63,7 @@ export async function bookTickets(repository, userId, input) {
     status: 'pending',
     createdAt: new Date().toISOString(),
   };
-  tier.sold += quantity;
-  await Promise.all([
-    repository.tiers.save(tier),
-    repository.bookings.save(booking),
-  ]);
+  await repository.reserveBooking(booking);
   return booking;
 }
 

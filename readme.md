@@ -17,16 +17,22 @@ There are no third-party runtime dependencies.
 
 ## Getting started
 
-From the project root, run the tests:
+From the project root, initialize the sample data once, then start the server:
+
+```powershell
+npm run seed
+npm start
+```
+
+The SQLite database is stored at `data/ticketing.sqlite` and retained across
+server restarts. The seed command skips initialization once events exist. To
+compare the unsafe check-then-write behavior with the atomic fix, run
+`npm run oversell`.
+
+Run the tests with:
 
 ```powershell
 npm test
-```
-
-To start the current HTTP server, run:
-
-```powershell
-npm start
 ```
 
 The server listens on port `3000` by default. Set the `PORT` environment
@@ -40,7 +46,8 @@ variable to use another valid port. The health endpoint is available at
   availability.
 - Event sorting by date, cheapest price, or remaining seats.
 - Publishing events and listing summaries while hiding drafts by default.
-- A booking state machine and a Node HTTP server with an in-memory REST API.
+- A booking state machine and a Node HTTP server with a persistent SQLite REST API.
+- Atomic ticket reservations that prevent overselling.
 - Automated tests using `node:test` and `node:assert/strict`.
 
 ## Build roadmap
@@ -72,14 +79,16 @@ and [docs/architecture.md](./docs/architecture.md) for the Build 3 design.
 ## Project layout
 
 ```text
-src/domain/      Domain errors, event summaries, search, sorting, state rules
-src/repositories/ In-memory persistence adapters
-src/services/    Event and booking workflows
-src/http/        HTTP router, app, and API routes
-src/lib/         Mock integrations such as payment
-public/      Static files served by the HTTP app
-test/        Automated tests
-docs/        Architecture and project documentation
+src/db/           SQLite schema and connection
+src/domain/       Domain errors, event summaries, search, sorting, state rules
+src/repositories/ In-memory and SQLite persistence adapters
+src/services/     Event and booking workflows
+src/http/         HTTP router, app, and API routes
+src/lib/          Mock integrations such as payment
+public/           Static files served by the HTTP app
+scripts/          Seed and overselling demonstration
+test/             Automated tests
+docs/             Architecture and project documentation
 ```
 
 ## Development notes

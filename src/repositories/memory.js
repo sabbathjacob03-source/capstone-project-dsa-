@@ -1,3 +1,5 @@
+import { DomainError } from '../domain/errors.js';
+
 function createCollection() {
   const records = new Map();
   const references = new Map();
@@ -34,5 +36,15 @@ export function createMemoryRepository() {
     events,
     tiers,
     bookings,
+    async reserveBooking(booking) {
+      const tier = await tiers.findById(booking.tierId);
+      if (!tier || tier.sold + booking.quantity > tier.capacity) {
+        throw new DomainError('SOLD_OUT', 'The requested tickets are sold out');
+      }
+      tier.sold += booking.quantity;
+      await tiers.save(tier);
+      await bookings.save(booking);
+      return booking;
+    },
   });
 }

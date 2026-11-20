@@ -8,7 +8,8 @@ export async function loadDomainStore(repository) {
     !repository.tiers ||
     typeof repository.tiers.list !== 'function' ||
     !repository.bookings ||
-    typeof repository.bookings.list !== 'function'
+    typeof repository.bookings.list !== 'function' ||
+    typeof repository.reserveBooking !== 'function'
   ) {
     throw new DomainError('VALIDATION', 'A compatible repository is required');
   }
