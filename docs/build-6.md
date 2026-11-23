@@ -35,15 +35,15 @@ Criteria: see [Build 4](build-4.md). They must now also pass on the screen.
 
 ## AI prompt
 
-Give your AI tool these files first: README.md, user-stories.md, build-6.md and docs/api-examples.md.
+Give your AI tool these files first: ../readme.md, user-stories.md, build-6.md and api-examples.md.
 
-Then paste the prompt below. When it answers, do not trust it yet: read the code, run the checks in "Done when", and write what was wrong in `docs/ai-log.md`.
+Then paste the prompt below. When it answers, do not trust it yet: read the code, run the checks in "Done when", and write what was wrong in `ai-log.md`.
 
 ```text
  we are building Build 6 of the Event Ticketing capstone: the website, in plain
 HTML, CSS and JavaScript (ES modules in the browser, no framework, no build
-step). Read README.md, user-stories.md, build-6.md and
-docs/api-examples.md before you write anything.
+step). Read ../readme.md, user-stories.md, build-6.md and
+api-examples.md before you write anything.
 
 1. public/index.html: browse events, with search, a city filter, a maximum
    price and a sort menu. public/event.html: one event, its tiers, a quantity
@@ -54,7 +54,7 @@ docs/api-examples.md before you write anything.
 
 3. public/js/mockData.js and public/js/api.js. api.js exports the functions
    the pages call (listEvents, getEvent, createBooking, pay) and returns
-   promises with the same shape as the real API in docs/api-examples.md. For
+   promises with the same shape as the real API in api-examples.md. For
    now they read from mockData.js. Pages must never call fetch directly.
 
 4. public/js/pages/home.js and event.js, and public/css/styles.css.
@@ -76,4 +76,4 @@ that you were unsure about.
 
 The Definition of done in [user-stories.md](user-stories.md) applies to every story in this build.
 
-[All builds](all-builds.md) · [Build 5](build-5.md)
+[Milestones](milestones.md) · [Build 5](build-5.md)

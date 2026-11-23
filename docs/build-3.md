@@ -8,7 +8,7 @@ third-party packages and does not implement business rules in HTTP handlers.
 
 ## Deliverables
 
-- `docs/architecture.md` with Mermaid diagrams for application layers, the
+- `architecture.md` with Mermaid diagrams for application layers, the
   event/ticket tier/booking/user data model, and the booking lifecycle.
 - `src/domain/bookingStateMachine.js` with explicit booking states and allowed
   transitions.

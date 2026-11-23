@@ -15,7 +15,7 @@ persistence in their own layers. Use Node.js built-ins only.
 - `src/lib/mockPaymentGateway.js`: a mock charge function with success and
   decline outcomes; it must never receive card numbers.
 - `src/http/apiRoutes.js`: REST endpoints connected to the services.
-- `docs/api-examples.md`: curl examples for the API calls.
+- `api-examples.md`: curl examples for the API calls.
 - API tests using `node:test` and a real HTTP server listening on a free port.
 
 ## Layering rules
@@ -62,7 +62,7 @@ Event search accepts the Build 2 query and sorting options, including `q`,
 
 ## API examples
 
-See [docs/api-examples.md](./docs/api-examples.md) for PowerShell `curl.exe`
+See [api-examples.md](./api-examples.md) for PowerShell `curl.exe`
 examples. The suggested sequence is create an event, add a tier, publish,
 search, book, pay, and cancel a pending booking.
 

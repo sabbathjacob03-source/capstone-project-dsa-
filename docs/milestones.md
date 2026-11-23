@@ -1,4 +1,4 @@
-# Event Ticketing Capstone: All Builds
+# Event Ticketing Capstone: Milestones
 
 This document is a high-level roadmap of the nine capstone builds. Each build
 adds a layer to the event ticketing platform, from its booking rules to a
