@@ -74,8 +74,9 @@ The capstone is organized as nine milestones:
 
 See [all-builds.md](./all-builds.md) for the high-level roadmap,
 [build-1.md](./build-1.md) for Build 1, [build-2.md](./build-2.md) for Build 2,
-[docs/architecture.md](./docs/architecture.md) for the Build 3 design, and
-[docs/build-5.md](./docs/build-5.md) for Build 5.
+[docs/architecture.md](./docs/architecture.md) for the Build 3 design,
+[build-4.md](./build-4.md) for Build 4, and [build-5.md](./build-5.md) for
+Build 5.
 
 ## Project layout
 
