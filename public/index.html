@@ -3,12 +3,46 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Event Ticketing Capstone</title>
+    <title>Event Ticketing</title>
+    <link rel="stylesheet" href="/css/styles.css">
   </head>
   <body>
-    <main>
-      <h1>Event Ticketing Capstone</h1>
-      <p>The Build 3 HTTP server is running.</p>
+    <header class="site-header">
+      <a class="brand" href="/index.html">Event Ticketing</a>
+    </header>
+    <main class="page-shell">
+      <p class="sr-only">Event Ticketing Capstone</p>
+      <section class="hero">
+        <p class="eyebrow">Find your next experience</p>
+        <h1>Discover events</h1>
+      </section>
+      <form id="filters" class="filter-panel" role="search">
+        <div class="field">
+          <label for="search">Search</label>
+          <input id="search" name="q" type="search" placeholder="Title or venue">
+        </div>
+        <div class="field">
+          <label for="city">City</label>
+          <select id="city" name="city">
+            <option value="">All cities</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="max-price">Maximum price</label>
+          <input id="max-price" name="maxPriceCents" type="number" min="0" step="1" placeholder="No limit">
+        </div>
+        <div class="field">
+          <label for="sort">Sort by</label>
+          <select id="sort" name="sortBy">
+            <option value="date">Date</option>
+            <option value="price">Price</option>
+            <option value="availability">Availability</option>
+          </select>
+        </div>
+      </form>
+      <p id="results-count" class="results-count" aria-live="polite"></p>
+      <section id="events" class="event-grid" aria-label="Events"></section>
     </main>
+    <script type="module" src="/js/pages/home.js"></script>
   </body>
 </html>

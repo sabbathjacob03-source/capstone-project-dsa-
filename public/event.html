@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Event details</title>
+    <link rel="stylesheet" href="/css/styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/index.html">Event Ticketing</a>
+      <a class="back-link" href="/index.html">Back to events</a>
+    </header>
+    <main class="page-shell event-page">
+      <div id="event-details"></div>
+      <section id="checkout" class="checkout" hidden>
+        <h2>Checkout</h2>
+        <div id="hold-status" class="hold-status" role="status"></div>
+        <div id="booking-summary"></div>
+        <form id="payment-form" novalidate>
+          <div class="field">
+            <label for="card-name">Name on card</label>
+            <input id="card-name" name="cardName" autocomplete="cc-name" required>
+          </div>
+          <div class="field">
+            <label for="card-number">Card number</label>
+            <input id="card-number" name="cardNumber" inputmode="numeric" autocomplete="cc-number" required>
+          </div>
+          <div class="form-row">
+            <div class="field">
+              <label for="expiry">Expiry</label>
+              <input id="expiry" name="expiry" placeholder="MM/YY" autocomplete="cc-exp" required>
+            </div>
+            <div class="field">
+              <label for="cvc">CVC</label>
+              <input id="cvc" name="cvc" inputmode="numeric" autocomplete="cc-csc" required>
+            </div>
+          </div>
+          <p id="payment-error" class="error" role="alert" hidden></p>
+          <button class="primary-button" type="submit">Pay now</button>
+        </form>
+      </section>
+    </main>
+    <script type="module" src="/js/pages/event.js"></script>
+  </body>
+</html>
