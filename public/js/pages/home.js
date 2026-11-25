@@ -11,8 +11,6 @@ function formatDate(value) {
 }
 
 function eventCard(event) {
-  const cheapest = Math.min(...event.tiers.map((tier) => tier.priceCents));
-  const totalSeats = event.tiers.reduce((sum, tier) => sum + tier.seatsLeft, 0);
   return el('article', { className: 'event-card' }, [
     el('div', { className: 'event-card-accent' }),
     el('div', { className: 'event-card-body' }, [
@@ -23,11 +21,11 @@ function eventCard(event) {
       el('div', { className: 'event-card-footer' }, [
         el('div', {}, [
           el('span', { className: 'muted', textContent: 'From' }),
-          el('strong', { textContent: formatPrice(cheapest) }),
+          el('strong', { textContent: event.minPriceCents === null ? 'Price unavailable' : formatPrice(event.minPriceCents) }),
         ]),
         el('div', { className: 'availability' }, [
           el('span', { className: 'availability-dot' }),
-          el('span', { textContent: totalSeats ? `${totalSeats} seats left` : 'Sold out' }),
+          el('span', { textContent: event.seatsLeft ? `${event.seatsLeft} seats left` : 'Sold out' }),
         ]),
       ]),
       el('a', {

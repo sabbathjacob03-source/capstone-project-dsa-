@@ -31,11 +31,30 @@ export function createMemoryRepository() {
   const events = createCollection();
   const tiers = createCollection();
   const bookings = createCollection();
+  const usersById = new Map();
+  const usersByEmail = new Map();
+  const users = Object.freeze({
+    async findById(id) {
+      return usersById.get(id);
+    },
+    async findByEmail(email) {
+      return usersByEmail.get(String(email).toLowerCase());
+    },
+    async list() {
+      return [...usersById.values()];
+    },
+    async save(user) {
+      usersById.set(user.id, user);
+      usersByEmail.set(user.email.toLowerCase(), user);
+      return user;
+    },
+  });
 
   return Object.freeze({
     events,
     tiers,
     bookings,
+    users,
     async reserveBooking(booking) {
       const tier = await tiers.findById(booking.tierId);
       if (!tier || tier.sold + booking.quantity > tier.capacity) {

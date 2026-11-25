@@ -39,6 +39,14 @@ The server listens on port `3000` by default. Set the `PORT` environment
 variable to use another valid port. The health endpoint is available at
 `http://localhost:3000/health`.
 
+Authentication requires a secret for signed bearer tokens. Set `TOKEN_SECRET`
+before starting the server:
+
+```powershell
+$env:TOKEN_SECRET="a-long-random-secret"
+npm start
+```
+
 ## Current features
 
 - Stable merge sort that returns a new array without changing its input.

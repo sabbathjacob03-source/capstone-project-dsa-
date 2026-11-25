@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=22.13"
+  },
   "scripts": {
     "start": "node src/server.js",
-    "test": "node --test test/sorting.test.js test/eventSearch.test.js test/inventory.test.js test/bookingStateMachine.test.js test/router.test.js test/httpApp.test.js test/api.test.js test/ids.test.js test/oversell.test.js",
+    "test": "node --test test/sorting.test.js test/eventSearch.test.js test/inventory.test.js test/bookingStateMachine.test.js test/router.test.js test/httpApp.test.js test/api.test.js test/auth.test.js test/ids.test.js test/oversell.test.js",
     "seed": "node scripts/seed.js",
     "oversell": "node scripts/oversell-demo.js"
   }

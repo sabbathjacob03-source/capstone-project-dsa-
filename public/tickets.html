@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My tickets</title>
+    <link rel="stylesheet" href="/css/styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/index.html">Event Ticketing</a>
+      <nav class="header-nav">
+        <a class="back-link" href="/index.html">Events</a>
+        <button id="logout" type="button" class="text-button">Log out</button>
+      </nav>
+    </header>
+    <main class="page-shell">
+      <h1>My tickets</h1>
+      <p id="tickets-status" role="status">Loading tickets...</p>
+      <section id="tickets" class="ticket-list"></section>
+    </main>
+    <script type="module" src="/js/pages/tickets.js"></script>
+  </body>
+</html>

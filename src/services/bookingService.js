@@ -8,7 +8,7 @@ const MAX_TICKETS_PER_BOOKING = 10;
 
 function requireUserId(userId) {
   if (typeof userId !== 'string' || userId.trim() === '') {
-    throw new DomainError('UNAUTHENTICATED', 'The x-user-id header is required');
+    throw new DomainError('UNAUTHENTICATED', 'A bearer token is required');
   }
   return userId.trim();
 }
@@ -107,7 +107,7 @@ export async function cancelBooking(repository, userId, reference) {
   const booking = store.bookingsByReference.get(reference);
   if (!booking) throw new DomainError('NOT_FOUND', 'Booking not found');
   if (booking.userId !== attendeeId) {
-    throw new DomainError('FORBIDDEN', 'Only the booking owner can cancel this booking');
+    throw new DomainError('NOT_FOUND', 'Booking not found');
   }
   if (booking.status !== 'pending') {
     throw new DomainError('INVALID_STATE', 'Only unpaid bookings can be cancelled');
@@ -125,4 +125,20 @@ export async function cancelBooking(repository, userId, reference) {
     repository.bookings.save(booking),
   ]);
   return booking;
+}
+
+export async function getBooking(repository, userId, reference) {
+  const attendeeId = requireUserId(userId);
+  const store = await loadDomainStore(repository);
+  const booking = store.bookingsByReference.get(reference);
+  if (!booking || booking.userId !== attendeeId) {
+    throw new DomainError('NOT_FOUND', 'Booking not found');
+  }
+  return booking;
+}
+
+export async function listBookings(repository, userId) {
+  const attendeeId = requireUserId(userId);
+  const store = await loadDomainStore(repository);
+  return [...store.bookings.values()].filter((booking) => booking.userId === attendeeId);
 }
