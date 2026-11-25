@@ -74,7 +74,7 @@ The capstone is organized as nine milestones:
    updates.
 6. **Frontend:** event browsing and mock checkout.
 7. **Authentication and roles:** connected organizer, attendee, and staff
-   experiences.
+   experiences. See [Build 7](./docs/build-7.md).
 8. **Refunds and waitlists:** refund rules, expiring bookings, and time-limited
    waitlist offers.
 9. **Check-in, CI, and security:** signed QR tickets, staff check-in, security
@@ -84,7 +84,8 @@ See [milestones.md](./docs/milestones.md) for the high-level roadmap,
 [build-1.md](./docs/build-1.md) for Build 1, [build-2.md](./docs/build-2.md) for Build 2,
 [docs/architecture.md](./docs/architecture.md) for the Build 3 design,
 [build-4.md](./docs/build-4.md) for Build 4, [build-5.md](./docs/build-5.md)
-for Build 5, and [build-6.md](./docs/build-6.md) for Build 6.
+for Build 5, [build-6.md](./docs/build-6.md) for Build 6, and
+[build-7.md](./docs/build-7.md) for Build 7.
 
 ## Project layout
 

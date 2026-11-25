@@ -43,7 +43,7 @@ delivers it.
 
 | Story | Criteria in |
 |---|---|
-| S01 | Build 7 guide (planned) |
+| S01 | [build-7.md](./build-7.md) |
 | S02 | [build-2.md](./build-2.md) |
 | S03 | [build-2.md](./build-2.md) |
 | S04 | [build-2.md](./build-2.md) |
@@ -55,7 +55,7 @@ delivers it.
 | S10 | Build 8 guide (planned) |
 | S11 | Build 8 guide (planned) |
 | S12 | Build 8 guide (planned) |
-| S13 | Build 7 guide (planned) |
+| S13 | [build-7.md](./build-7.md) |
 | S14 | Build 9 guide (planned) |
 | S15 | Build 9 guide (planned) |
 | S16 | [build-2.md](./build-2.md) |
