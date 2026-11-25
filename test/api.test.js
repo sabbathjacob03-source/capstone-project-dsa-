@@ -4,6 +4,9 @@ import { createApp } from '../src/http/app.js';
 import { createApiRouter } from '../src/http/apiRoutes.js';
 import { createMemoryRepository } from '../src/repositories/memory.js';
 import { charge } from '../src/lib/mockPaymentGateway.js';
+import { signToken } from '../src/lib/token.js';
+
+process.env.TOKEN_SECRET = 'test-build-7-secret';
 
 describe('in-memory REST API', () => {
   const repository = createMemoryRepository();
@@ -33,7 +36,10 @@ describe('in-memory REST API', () => {
 
   async function request(path, { method = 'GET', userId, body } = {}) {
     const headers = {};
-    if (userId) headers['x-user-id'] = userId;
+    if (userId) {
+      const role = userId.startsWith('organizer') ? 'organizer' : 'attendee';
+      headers.authorization = `Bearer ${signToken({ sub: userId, email: `${userId}@test.local`, role })}`;
+    }
     if (body !== undefined) headers['content-type'] = 'application/json';
     const response = await fetch(`${baseUrl}${path}`, {
       method,
@@ -147,7 +153,8 @@ describe('in-memory REST API', () => {
       method: 'POST',
       userId: 'attendee-1',
     });
-    assert.equal(forbiddenCancel.response.status, 403);
+    assert.equal(forbiddenCancel.response.status, 404);
+    assert.equal(forbiddenCancel.result.error.code, 'NOT_FOUND');
     const cancelled = await request(`/api/bookings/${pendingBooking.result.reference}/cancel`, {
       method: 'POST',
       userId: 'attendee-2',
@@ -164,14 +171,14 @@ describe('in-memory REST API', () => {
     assert.equal(afterCancellation.result[0].seatsLeft, 1);
   });
 
-  it('requires x-user-id for mutations and uses the shared error response shape', async () => {
+  it('requires a bearer token for mutations and uses the shared error response shape', async () => {
     const result = await request('/api/events', {
       method: 'POST',
       body: { title: 'Missing caller' },
     });
     assert.equal(result.response.status, 401);
     assert.deepEqual(result.result, {
-      error: { code: 'UNAUTHENTICATED', message: 'The x-user-id header is required' },
+      error: { code: 'UNAUTHENTICATED', message: 'A bearer token is required' },
     });
   });
 

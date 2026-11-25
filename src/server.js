@@ -3,6 +3,11 @@ import { createApiRouter } from './http/apiRoutes.js';
 import { config } from './config.js';
 import { createSqliteRepository } from './repositories/sqlite.js';
 
+if (![process.env.TOKEN_SECRET, process.env.JWT_SECRET, process.env.AUTH_SECRET]
+  .some((secret) => typeof secret === 'string' && secret.trim() !== '')) {
+  throw new Error('Set TOKEN_SECRET before starting the server');
+}
+
 const repository = createSqliteRepository();
 const router = createApiRouter({ repository });
 const server = createApp({ router, publicDir: config.publicDir });

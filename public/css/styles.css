@@ -92,6 +92,20 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .error { color: #b4233e; background: #fdebed; border-radius: 8px; padding: 10px 12px; }
 .action-error { grid-column: 1/-1; margin: 0; }
+.header-nav { display: flex; align-items: center; gap: 16px; }
+.text-button,.secondary-button { min-height: 40px; border: 1px solid #dce0ea; border-radius: 9px; background: #fff; color: #17213a; padding: 8px 12px; font: inherit; font-weight: 700; cursor: pointer; }
+.auth-page { display: grid; place-items: start center; }
+.auth-card { width: min(520px, 100%); padding: 28px; background: #fff; border: 1px solid #e8ebf2; border-radius: 18px; box-shadow: 0 12px 30px rgba(36,43,66,.08); }
+.auth-card h1 { font-size: 2.2rem; }
+.auth-tabs { display: flex; gap: 8px; margin-bottom: 18px; }
+.auth-tabs button { flex: 1; min-height: 42px; border: 1px solid #dce0ea; border-radius: 9px; background: #fff; font: inherit; font-weight: 700; }
+.auth-tabs button.active { border-color: #7057d9; background: #7057d9; color: #fff; }
+#auth-form { display: grid; gap: 14px; }
+.ticket-list { display: grid; gap: 12px; }
+.ticket-card { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; padding: 18px; background: #fff; border: 1px solid #e8ebf2; border-radius: 14px; }
+.ticket-card p { margin: 4px 0 0; color: #69728a; }
+.tier-form { grid-column: 1/-1; display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 8px; }
+.organizer-page { max-width: 800px; }
 @media (max-width:900px) {
   .filter-panel { grid-template-columns: 1fr 1fr; }
   .event-grid { grid-template-columns: 1fr 1fr; }

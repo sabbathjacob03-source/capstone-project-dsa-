@@ -115,6 +115,7 @@ function summarizeEvent(event, tiers) {
   const seatsLeft = tiers.reduce((total, tier) => total + tier.capacity - tier.sold, 0);
   return {
     id: event.id,
+    organizerId: event.organizerId,
     title: event.title,
     city: event.city,
     venue: event.venue,

@@ -39,6 +39,17 @@ function bookingFromRow(row) {
   };
 }
 
+function userFromRow(row) {
+  if (!row) return undefined;
+  return {
+    id: row.id,
+    email: row.email,
+    passwordHash: row.password_hash,
+    role: row.role,
+    createdAt: row.created_at,
+  };
+}
+
 function createCollection({ findById, findByReference, list, save }) {
   return Object.freeze({ findById, findByReference, list, save });
 }
@@ -54,6 +65,38 @@ export function createSqliteRepository({ databasePath } = {}) {
   const bookingByReference = database.prepare('SELECT * FROM bookings WHERE reference = ?');
   const allBookings = database.prepare('SELECT * FROM bookings ORDER BY rowid');
   const ensureUser = database.prepare('INSERT OR IGNORE INTO users (id, created_at) VALUES (?, ?)');
+  const userById = database.prepare('SELECT * FROM users WHERE id = ?');
+  const userByEmail = database.prepare('SELECT * FROM users WHERE email = ?');
+  const allUsers = database.prepare('SELECT * FROM users ORDER BY rowid');
+  const saveUser = database.prepare(`
+    INSERT INTO users (id, created_at, email, password_hash, role)
+    VALUES (?, ?, ?, ?, ?)
+    ON CONFLICT(id) DO UPDATE SET
+      email = excluded.email,
+      password_hash = excluded.password_hash,
+      role = excluded.role
+  `);
+  const users = Object.freeze({
+    findById(id) {
+      return userFromRow(userById.get(id));
+    },
+    findByEmail(email) {
+      return userFromRow(userByEmail.get(String(email).toLowerCase()));
+    },
+    list() {
+      return allUsers.all().map(userFromRow);
+    },
+    save(user) {
+      saveUser.run(
+        user.id,
+        user.createdAt,
+        user.email.toLowerCase(),
+        user.passwordHash,
+        user.role,
+      );
+      return user;
+    },
+  });
 
   const events = createCollection({
     findById(id) {
@@ -165,6 +208,7 @@ export function createSqliteRepository({ databasePath } = {}) {
     events,
     tiers,
     bookings,
+    users,
     reserveBooking(booking) {
       database.exec('BEGIN IMMEDIATE');
       try {

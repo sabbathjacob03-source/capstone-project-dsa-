@@ -39,6 +39,14 @@ The server listens on port `3000` by default. Set the `PORT` environment
 variable to use another valid port. The health endpoint is available at
 `http://localhost:3000/health`.
 
+Authentication requires a secret for signed bearer tokens. Set `TOKEN_SECRET`
+before starting the server:
+
+```powershell
+$env:TOKEN_SECRET="a-long-random-secret"
+npm start
+```
+
 ## Current features
 
 - Stable merge sort that returns a new array without changing its input.
@@ -72,11 +80,11 @@ The capstone is organized as nine milestones:
 9. **Check-in, CI, and security:** signed QR tickets, staff check-in, security
    protections, and automated checks.
 
-See [all-builds.md](./all-builds.md) for the high-level roadmap,
-[build-1.md](./build-1.md) for Build 1, [build-2.md](./build-2.md) for Build 2,
+See [milestones.md](./docs/milestones.md) for the high-level roadmap,
+[build-1.md](./docs/build-1.md) for Build 1, [build-2.md](./docs/build-2.md) for Build 2,
 [docs/architecture.md](./docs/architecture.md) for the Build 3 design,
-[build-4.md](./build-4.md) for Build 4, and [build-5.md](./build-5.md) for
-Build 5.
+[build-4.md](./docs/build-4.md) for Build 4, [build-5.md](./docs/build-5.md)
+for Build 5, and [build-6.md](./docs/build-6.md) for Build 6.
 
 ## Project layout
 
@@ -90,7 +98,7 @@ src/lib/          Mock integrations such as payment
 public/           Static files served by the HTTP app
 scripts/          Seed and overselling demonstration
 test/             Automated tests
-docs/             Architecture and project documentation
+docs/             Build guides, milestones, user stories, and project documentation
 ```
 
 ## Development notes

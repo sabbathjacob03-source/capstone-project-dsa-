@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Organizer dashboard</title>
+    <link rel="stylesheet" href="/css/styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/index.html">Event Ticketing</a>
+      <nav class="header-nav">
+        <a class="back-link" href="/index.html">Events</a>
+        <button id="logout" type="button" class="text-button">Log out</button>
+      </nav>
+    </header>
+    <main class="page-shell organizer-page">
+      <h1>Organizer dashboard</h1>
+      <section class="auth-card">
+        <h2>Create event</h2>
+        <form id="event-form" novalidate>
+          <div class="field"><label for="title">Title</label><input id="title" name="title" required></div>
+          <div class="field"><label for="city">City</label><input id="city" name="city" required></div>
+          <div class="field"><label for="venue">Venue</label><input id="venue" name="venue" required></div>
+          <div class="field"><label for="startsAt">Start date</label><input id="startsAt" name="startsAt" type="datetime-local" required></div>
+          <p id="event-error" class="error" role="alert" hidden></p>
+          <button class="primary-button" type="submit">Create event</button>
+        </form>
+      </section>
+      <p id="organizer-status" role="status"></p>
+      <section id="organizer-events" class="ticket-list"></section>
+    </main>
+    <script type="module" src="/js/pages/organizer.js"></script>
+  </body>
+</html>

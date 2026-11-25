@@ -1,6 +1,9 @@
 CREATE TABLE IF NOT EXISTS users (
   id TEXT PRIMARY KEY,
-  created_at TEXT NOT NULL
+  created_at TEXT NOT NULL,
+  email TEXT,
+  password_hash TEXT,
+  role TEXT CHECK (role IS NULL OR role IN ('attendee', 'organizer', 'staff'))
 );
 
 CREATE TABLE IF NOT EXISTS events (

@@ -33,7 +33,9 @@ function statusFor(error) {
     if (error.code === 'NOT_FOUND') return 404;
     if (error.code === 'PAYLOAD_TOO_LARGE') return 413;
     if (error.code === 'UNAUTHENTICATED') return 401;
+    if (error.code === 'INVALID_CREDENTIALS') return 401;
     if (error.code === 'FORBIDDEN') return 403;
+    if (error.code === 'EMAIL_TAKEN') return 409;
     if (error.code === 'PAYMENT_DECLINED') return 402;
     if (
       error.code === 'SOLD_OUT' ||

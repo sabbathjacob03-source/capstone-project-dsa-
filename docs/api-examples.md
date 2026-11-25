@@ -1,15 +1,15 @@
 # Build 4 API examples
 
-The server defaults to `http://localhost:3000`. Every mutation requires an
-`x-user-id` header until authentication is added in Build 7. These PowerShell
-examples use `curl.exe` and placeholder IDs; replace `EVENT_ID`, `TIER_ID`, and
-`BOOKING_REFERENCE` with values returned by earlier calls.
+The server defaults to `http://localhost:3000`. Set `TOKEN_SECRET` and use
+signup/login to obtain a bearer token. Send `Authorization: Bearer <token>` on
+protected requests. These PowerShell examples use `curl.exe` and placeholder
+values; replace `TOKEN`, `EVENT_ID`, `TIER_ID`, and `BOOKING_REFERENCE`.
 
 ## 1. Create an event
 
 ```powershell
 curl.exe -X POST "http://localhost:3000/api/events" `
-  -H "x-user-id: organizer-1" `
+  -H "Authorization: Bearer TOKEN" `
   -H "Content-Type: application/json" `
   -d '{"title":"Lagos Tech Meetup","city":"Lagos","venue":"Yaba Hub","startsAt":"2027-01-15T17:00:00Z"}'
 ```
@@ -18,7 +18,7 @@ curl.exe -X POST "http://localhost:3000/api/events" `
 
 ```powershell
 curl.exe -X POST "http://localhost:3000/api/events/EVENT_ID/tiers" `
-  -H "x-user-id: organizer-1" `
+  -H "Authorization: Bearer TOKEN" `
   -H "Content-Type: application/json" `
   -d '{"name":"General","priceCents":500000,"capacity":100}'
 ```
@@ -27,7 +27,7 @@ curl.exe -X POST "http://localhost:3000/api/events/EVENT_ID/tiers" `
 
 ```powershell
 curl.exe -X POST "http://localhost:3000/api/events/EVENT_ID/publish" `
-  -H "x-user-id: organizer-1"
+  -H "Authorization: Bearer TOKEN"
 ```
 
 ## 4. Search events
@@ -43,7 +43,7 @@ Supported query parameters are `q`, `city`, `from`, `to`, `maxPriceCents`,
 
 ```powershell
 curl.exe -X POST "http://localhost:3000/api/bookings" `
-  -H "x-user-id: attendee-1" `
+  -H "Authorization: Bearer TOKEN" `
   -H "Content-Type: application/json" `
   -d '{"tierId":"TIER_ID","quantity":2}'
 ```
@@ -56,7 +56,7 @@ Successful mock payment:
 
 ```powershell
 curl.exe -X POST "http://localhost:3000/api/bookings/BOOKING_REFERENCE/pay" `
-  -H "x-user-id: attendee-1" `
+  -H "Authorization: Bearer TOKEN" `
   -H "Content-Type: application/json" `
   -d '{}'
 ```
@@ -65,7 +65,7 @@ Ask the mock gateway to decline the payment:
 
 ```powershell
 curl.exe -X POST "http://localhost:3000/api/bookings/BOOKING_REFERENCE/pay" `
-  -H "x-user-id: attendee-1" `
+  -H "Authorization: Bearer TOKEN" `
   -H "Content-Type: application/json" `
   -d '{"decline":true}'
 ```
@@ -76,7 +76,7 @@ A declined payment returns `PAYMENT_DECLINED` and leaves the booking pending.
 
 ```powershell
 curl.exe -X POST "http://localhost:3000/api/bookings/BOOKING_REFERENCE/cancel" `
-  -H "x-user-id: attendee-1"
+  -H "Authorization: Bearer TOKEN"
 ```
 
 Only the attendee who created a booking can pay for or cancel it. Build 4 allows

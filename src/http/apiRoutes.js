@@ -2,18 +2,12 @@ import { DomainError } from '../domain/errors.js';
 import * as bookingService from '../services/bookingService.js';
 import * as eventService from '../services/eventService.js';
 import { createRouter } from './router.js';
+import { requireRole } from './guards.js';
+import { registerAuthRoutes } from '../routes/auth.js';
 
 function sendJson(response, statusCode, value) {
   response.writeHead(statusCode, { 'content-type': 'application/json; charset=utf-8' });
   response.end(JSON.stringify(value));
-}
-
-function requireUserId(request) {
-  const userId = request.headers['x-user-id'];
-  if (typeof userId !== 'string' || userId.trim() === '') {
-    throw new DomainError('UNAUTHENTICATED', 'The x-user-id header is required');
-  }
-  return userId.trim();
 }
 
 function searchCriteria(url) {
@@ -35,22 +29,33 @@ function searchCriteria(url) {
 export function createApiRouter({ repository, paymentGateway } = {}) {
   if (!repository) throw new DomainError('VALIDATION', 'A repository is required');
   const router = createRouter();
+  registerAuthRoutes(router, repository);
 
   router.add('POST', '/api/events', async (request, response) => {
-    const event = await eventService.createEvent(repository, requireUserId(request), request.body);
+    const user = requireRole('organizer')(request);
+    const event = await eventService.createEvent(repository, user.sub, request.body);
     sendJson(response, 201, event);
   });
 
   router.add('POST', '/api/events/:id/tiers', async (request, response, { id }) => {
-    requireUserId(request);
-    const tier = await eventService.addTier(repository, id, request.body);
+    const user = requireRole('organizer')(request);
+    const tier = await eventService.addTier(repository, id, user.sub, request.body);
     sendJson(response, 201, tier);
   });
 
   router.add('POST', '/api/events/:id/publish', async (request, response, { id }) => {
-    requireUserId(request);
-    const event = await eventService.publishEvent(repository, id);
+    const user = requireRole('organizer')(request);
+    const event = await eventService.publishEvent(repository, id, user.sub);
     sendJson(response, 200, event);
+  });
+
+  router.add('GET', '/api/events/mine', async (request, response) => {
+    const user = requireRole('organizer')(request);
+    sendJson(response, 200, await eventService.listOrganizerEvents(repository, user.sub));
+  });
+
+  router.add('GET', '/api/events/:id', async (request, response, { id }) => {
+    sendJson(response, 200, await eventService.getEvent(repository, id));
   });
 
   router.add('GET', '/api/events', async (request, response) => {
@@ -64,18 +69,30 @@ export function createApiRouter({ repository, paymentGateway } = {}) {
   });
 
   router.add('POST', '/api/bookings', async (request, response) => {
+    const user = requireRole('attendee')(request);
     const booking = await bookingService.bookTickets(
       repository,
-      requireUserId(request),
+      user.sub,
       request.body,
     );
     sendJson(response, 201, booking);
   });
 
+  router.add('GET', '/api/bookings', async (request, response) => {
+    const user = requireRole('attendee')(request);
+    sendJson(response, 200, await bookingService.listBookings(repository, user.sub));
+  });
+
+  router.add('GET', '/api/bookings/:reference', async (request, response, { reference }) => {
+    const user = requireRole('attendee')(request);
+    sendJson(response, 200, await bookingService.getBooking(repository, user.sub, reference));
+  });
+
   router.add('POST', '/api/bookings/:reference/pay', async (request, response, { reference }) => {
+    const user = requireRole('attendee')(request);
     const booking = await bookingService.payBooking(
       repository,
-      requireUserId(request),
+      user.sub,
       reference,
       request.body ?? {},
       paymentGateway,
@@ -84,9 +101,10 @@ export function createApiRouter({ repository, paymentGateway } = {}) {
   });
 
   router.add('POST', '/api/bookings/:reference/cancel', async (request, response, { reference }) => {
+    const user = requireRole('attendee')(request);
     const booking = await bookingService.cancelBooking(
       repository,
-      requireUserId(request),
+      user.sub,
       reference,
     );
     sendJson(response, 200, booking);
