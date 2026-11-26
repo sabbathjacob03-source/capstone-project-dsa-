@@ -78,6 +78,22 @@ export function cancelBooking(reference) {
   return request(`/api/bookings/${encodeURIComponent(reference)}/cancel`, { method: 'POST' });
 }
 
+export function previewRefund(reference) {
+  return request(`/api/bookings/${encodeURIComponent(reference)}/refund`);
+}
+
+export function joinWaitlist(input) {
+  return request('/api/waitlist', { method: 'POST', body: input });
+}
+
+export function listWaitlistOffers() {
+  return request('/api/waitlist/offers');
+}
+
+export function acceptWaitlistOffer(id) {
+  return request(`/api/waitlist/offers/${encodeURIComponent(id)}/accept`, { method: 'POST' });
+}
+
 export function pay(referenceOrBooking, options = {}) {
   const reference = typeof referenceOrBooking === 'string' ? referenceOrBooking : referenceOrBooking.reference;
   return request(`/api/bookings/${encodeURIComponent(reference)}/pay`, {

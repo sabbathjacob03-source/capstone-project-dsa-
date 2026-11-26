@@ -51,10 +51,10 @@ delivers it.
 | S06 | [build-2.md](./build-2.md) |
 | S07 | [build-4.md](./build-4.md) |
 | S08 | [build-5.md](./build-5.md) |
-| S09 | Build 8 guide (planned) |
-| S10 | Build 8 guide (planned) |
-| S11 | Build 8 guide (planned) |
-| S12 | Build 8 guide (planned) |
+| S09 | [build-8.md](./build-8.md) |
+| S10 | [build-8.md](./build-8.md) |
+| S11 | [build-8.md](./build-8.md) |
+| S12 | [build-8.md](./build-8.md) |
 | S13 | [build-7.md](./build-7.md) |
 | S14 | Build 9 guide (planned) |
 | S15 | Build 9 guide (planned) |

@@ -13,3 +13,10 @@
 - **What I asked:** Add password hashing and bearer-token authentication, three server-checked roles, private booking and organizer ownership rules, connected frontend pages, and tests.
 - **What came back:** Scrypt password storage, HS256 tokens, signup/login/me routes, role guards, ownership checks, fetch-based frontend pages, and auth tests.
 - **What was wrong (or "nothing"):** The first direct-service compatibility pass changed addTier and publish signatures in a way that broke existing direct service tests. Added overload-compatible calls so HTTP ownership checks remain strict while existing direct service tests continue to work.
+
+## Build 8
+
+### Prompt 1: Refunds, waitlist offers, and expiry
+- **What I asked:** Add time-based refunds, single-release cancellation, FIFO expiring waitlist offers, unpaid booking expiry, attendee UI, and boundary and lifecycle tests.
+- **What came back:** A pure refund policy, controlled clock, SQLite and in-memory lifecycle support, attendee API and UI flows, recurring maintenance, and Build 8 tests.
+- **What was wrong (or "nothing"):** The prompt did not specify hold durations or waitlist quantities. Chose 15-minute booking holds, 15-minute offers, and one seat per waitlist entry. Added a payment-processing compare-and-set state so maintenance cannot expire a booking during an in-flight payment.

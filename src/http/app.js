@@ -37,8 +37,14 @@ function statusFor(error) {
     if (error.code === 'FORBIDDEN') return 403;
     if (error.code === 'EMAIL_TAKEN') return 409;
     if (error.code === 'PAYMENT_DECLINED') return 402;
+    if (error.code === 'REFUND_FAILED') return 502;
     if (
       error.code === 'SOLD_OUT' ||
+      error.code === 'NOT_SOLD_OUT' ||
+      error.code === 'ALREADY_ON_WAITLIST' ||
+      error.code === 'BOOKING_EXPIRED' ||
+      error.code === 'OFFER_EXPIRED' ||
+      error.code === 'EVENT_STARTED' ||
       error.code === 'INVALID_STATE' ||
       error.code === 'INVALID_TRANSITION'
     ) return 409;

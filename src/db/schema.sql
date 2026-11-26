@@ -36,9 +36,31 @@ CREATE TABLE IF NOT EXISTS bookings (
   tier_id TEXT NOT NULL,
   quantity INTEGER NOT NULL CHECK (quantity > 0),
   amount_cents INTEGER NOT NULL CHECK (amount_cents >= 0),
-  status TEXT NOT NULL CHECK (status IN ('pending', 'paid', 'cancelled', 'refunded', 'checked_in')),
+  status TEXT NOT NULL CHECK (status IN ('pending', 'payment_processing', 'paid', 'refunding', 'cancelled', 'refunded', 'checked_in')),
   created_at TEXT NOT NULL,
+  hold_expires_at TEXT,
+  refund_amount_cents INTEGER CHECK (refund_amount_cents IS NULL OR refund_amount_cents >= 0),
   FOREIGN KEY (user_id) REFERENCES users(id),
   FOREIGN KEY (event_id) REFERENCES events(id),
   FOREIGN KEY (tier_id, event_id) REFERENCES ticket_tiers(id, event_id)
 );
+
+CREATE TABLE IF NOT EXISTS waitlist_entries (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  event_id TEXT NOT NULL,
+  tier_id TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  status TEXT NOT NULL CHECK (status IN ('waiting', 'offered', 'accepted', 'expired')),
+  offer_expires_at TEXT,
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (event_id) REFERENCES events(id),
+  FOREIGN KEY (tier_id, event_id) REFERENCES ticket_tiers(id, event_id)
+);
+
+CREATE INDEX IF NOT EXISTS waitlist_fifo
+  ON waitlist_entries(tier_id, status, created_at, id);
+
+CREATE UNIQUE INDEX IF NOT EXISTS waitlist_active_user
+  ON waitlist_entries(tier_id, user_id)
+  WHERE status IN ('waiting', 'offered');
