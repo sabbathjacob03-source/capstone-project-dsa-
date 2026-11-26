@@ -138,11 +138,20 @@ describe('in-memory REST API', () => {
     assert.equal(paid.result.status, 'paid');
     assert.deepEqual(paymentRequests, [{ decline: true }, { decline: false }]);
 
+    const refundPreview = await request(
+      `/api/bookings/${bookingResult.result.reference}/refund`,
+      { userId: 'attendee-1' },
+    );
+    assert.equal(refundPreview.response.status, 200);
+    assert.equal(refundPreview.result.refundAmountCents, 10_000);
+
     const paidCancel = await request(`/api/bookings/${bookingResult.result.reference}/cancel`, {
       method: 'POST',
       userId: 'attendee-1',
     });
-    assert.equal(paidCancel.response.status, 409);
+    assert.equal(paidCancel.response.status, 200);
+    assert.equal(paidCancel.result.status, 'refunded');
+    assert.equal(paidCancel.result.refundAmountCents, 10_000);
 
     const pendingBooking = await request('/api/bookings', {
       method: 'POST',
@@ -168,7 +177,66 @@ describe('in-memory REST API', () => {
     assert.equal(repeatedCancel.response.status, 409);
 
     const afterCancellation = await request('/api/events?onlyAvailable=true');
-    assert.equal(afterCancellation.result[0].seatsLeft, 1);
+    assert.equal(afterCancellation.result[0].seatsLeft, 3);
+  });
+
+  it('joins a sold-out waitlist, offers a released seat, and accepts it', async () => {
+    const created = await request('/api/events', {
+      method: 'POST',
+      userId: 'organizer-waitlist',
+      body: {
+        title: 'Waitlist Event',
+        city: 'Lagos',
+        venue: 'Yaba Hub',
+        startsAt: '2027-01-15T17:00:00Z',
+      },
+    });
+    const tier = await request(`/api/events/${created.result.id}/tiers`, {
+      method: 'POST',
+      userId: 'organizer-waitlist',
+      body: { name: 'General', priceCents: 5000, capacity: 1 },
+    });
+    await request(`/api/events/${created.result.id}/publish`, {
+      method: 'POST',
+      userId: 'organizer-waitlist',
+    });
+    const booking = await request('/api/bookings', {
+      method: 'POST',
+      userId: 'attendee-holder',
+      body: { tierId: tier.result.id, quantity: 1 },
+    });
+    const joined = await request('/api/waitlist', {
+      method: 'POST',
+      userId: 'attendee-waiter',
+      body: { tierId: tier.result.id },
+    });
+    assert.equal(joined.response.status, 201);
+
+    const duplicate = await request('/api/waitlist', {
+      method: 'POST',
+      userId: 'attendee-waiter',
+      body: { tierId: tier.result.id },
+    });
+    assert.equal(duplicate.response.status, 409);
+    assert.equal(duplicate.result.error.code, 'ALREADY_ON_WAITLIST');
+
+    const cancelled = await request(`/api/bookings/${booking.result.reference}/cancel`, {
+      method: 'POST',
+      userId: 'attendee-holder',
+    });
+    assert.equal(cancelled.response.status, 200);
+    const offers = await request('/api/waitlist/offers', { userId: 'attendee-waiter' });
+    assert.equal(offers.result.length, 1);
+    assert.equal(offers.result[0].status, 'offered');
+
+    const accepted = await request(`/api/waitlist/offers/${offers.result[0].id}/accept`, {
+      method: 'POST',
+      userId: 'attendee-waiter',
+    });
+    assert.equal(accepted.response.status, 201);
+    assert.equal(accepted.result.status, 'pending');
+    assert.equal(accepted.result.quantity, 1);
+    assert.equal((await repository.tiers.findById(tier.result.id)).sold, 1);
   });
 
   it('requires a bearer token for mutations and uses the shared error response shape', async () => {

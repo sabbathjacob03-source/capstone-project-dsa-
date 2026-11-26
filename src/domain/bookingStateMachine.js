@@ -2,15 +2,19 @@ import { DomainError } from './errors.js';
 
 export const BOOKING_STATES = Object.freeze([
   'pending',
+  'payment_processing',
   'paid',
+  'refunding',
   'cancelled',
   'refunded',
   'checked_in',
 ]);
 
 export const BOOKING_TRANSITIONS = Object.freeze({
-  pending: Object.freeze(['paid', 'cancelled']),
-  paid: Object.freeze(['checked_in', 'refunded', 'cancelled']),
+  pending: Object.freeze(['payment_processing', 'cancelled']),
+  payment_processing: Object.freeze(['pending', 'paid']),
+  paid: Object.freeze(['checked_in', 'refunding', 'cancelled']),
+  refunding: Object.freeze(['paid', 'refunded']),
   cancelled: Object.freeze([]),
   refunded: Object.freeze([]),
   checked_in: Object.freeze([]),

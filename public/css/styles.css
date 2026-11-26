@@ -106,6 +106,8 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .ticket-card p { margin: 4px 0 0; color: #69728a; }
 .tier-form { grid-column: 1/-1; display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 8px; }
 .organizer-page { max-width: 800px; }
+.waitlist-button { grid-column: 1/-1; justify-self: start; }
+.offer-countdown { margin: 4px 0 0; color: #765800; font-weight: 700; }
 @media (max-width:900px) {
   .filter-panel { grid-template-columns: 1fr 1fr; }
   .event-grid { grid-template-columns: 1fr 1fr; }

@@ -1,4 +1,4 @@
-import { createBooking, getEvent, pay } from '../api.js';
+import { createBooking, getEvent, joinWaitlist, pay } from '../api.js';
 import { el, formatPrice } from '../ui.js';
 
 const eventDetails = document.querySelector('#event-details');
@@ -17,7 +17,14 @@ function formatDate(value) {
 
 function showActionError(container, message) {
   container.querySelector('.action-error')?.remove();
+  container.querySelector('.action-message')?.remove();
   container.appendChild(el('p', { className: 'error action-error', textContent: message }));
+}
+
+function showActionMessage(container, message) {
+  container.querySelector('.action-message')?.remove();
+  container.querySelector('.action-error')?.remove();
+  container.appendChild(el('p', { className: 'seat-count action-message', textContent: message }));
 }
 
 function tierCard(tier) {
@@ -47,6 +54,26 @@ function tierCard(tier) {
     el('div', { className: 'quantity-control' }, [quantityLabel, quantity]),
     button,
   ]);
+
+  if (soldOut) {
+    const waitlistButton = el('button', {
+      type: 'button',
+      className: 'secondary-button waitlist-button',
+      textContent: 'Join waitlist',
+    });
+    waitlistButton.addEventListener('click', async () => {
+      waitlistButton.disabled = true;
+      try {
+        await joinWaitlist({ tierId: tier.id });
+        waitlistButton.textContent = 'Joined waitlist';
+        showActionMessage(card, 'You have joined the waitlist.');
+      } catch (error) {
+        showActionError(card, error.message);
+        waitlistButton.disabled = false;
+      }
+    });
+    card.appendChild(waitlistButton);
+  }
 
   button.addEventListener('click', async () => {
     const requestedQuantity = Number(quantity.value);

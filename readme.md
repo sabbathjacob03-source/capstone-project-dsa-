@@ -56,6 +56,8 @@ npm start
 - Publishing events and listing summaries while hiding drafts by default.
 - A booking state machine and a Node HTTP server with a persistent SQLite REST API.
 - Atomic ticket reservations that prevent overselling.
+- Time-based refunds, expiring bookings, and FIFO waitlist offers with reserved seats.
+- Authenticated attendee cancellation and waitlist workflows in the website.
 - Automated tests using `node:test` and `node:assert/strict`.
 
 ## Build roadmap
@@ -74,9 +76,9 @@ The capstone is organized as nine milestones:
    updates.
 6. **Frontend:** event browsing and mock checkout.
 7. **Authentication and roles:** connected organizer, attendee, and staff
-   experiences.
+   experiences. See [Build 7](./docs/build-7.md).
 8. **Refunds and waitlists:** refund rules, expiring bookings, and time-limited
-   waitlist offers.
+   waitlist offers. See [Build 8](./docs/build-8.md).
 9. **Check-in, CI, and security:** signed QR tickets, staff check-in, security
    protections, and automated checks.
 
@@ -84,7 +86,9 @@ See [milestones.md](./docs/milestones.md) for the high-level roadmap,
 [build-1.md](./docs/build-1.md) for Build 1, [build-2.md](./docs/build-2.md) for Build 2,
 [docs/architecture.md](./docs/architecture.md) for the Build 3 design,
 [build-4.md](./docs/build-4.md) for Build 4, [build-5.md](./docs/build-5.md)
-for Build 5, and [build-6.md](./docs/build-6.md) for Build 6.
+for Build 5, [build-6.md](./docs/build-6.md) for Build 6, and
+[build-7.md](./docs/build-7.md) for Build 7, and
+[build-8.md](./docs/build-8.md) for Build 8.
 
 ## Project layout
 
@@ -92,7 +96,8 @@ for Build 5, and [build-6.md](./docs/build-6.md) for Build 6.
 src/db/           SQLite schema and connection
 src/domain/       Domain errors, event summaries, search, sorting, state rules
 src/repositories/ In-memory and SQLite persistence adapters
-src/services/     Event and booking workflows
+src/services/     Event, booking, seat, and waitlist workflows
+src/jobs/         Scheduled booking and waitlist maintenance
 src/http/         HTTP router, app, and API routes
 src/lib/          Mock integrations such as payment
 public/           Static files served by the HTTP app

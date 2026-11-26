@@ -1,6 +1,8 @@
 import { DomainError } from '../domain/errors.js';
 import * as bookingService from '../services/bookingService.js';
+import * as waitlistService from '../services/waitlistService.js';
 import * as eventService from '../services/eventService.js';
+import { systemClock } from '../lib/clock.js';
 import { createRouter } from './router.js';
 import { requireRole } from './guards.js';
 import { registerAuthRoutes } from '../routes/auth.js';
@@ -26,7 +28,12 @@ function searchCriteria(url) {
   return criteria;
 }
 
-export function createApiRouter({ repository, paymentGateway } = {}) {
+export function createApiRouter({
+  repository,
+  paymentGateway,
+  refundGateway,
+  clock = systemClock,
+} = {}) {
   if (!repository) throw new DomainError('VALIDATION', 'A repository is required');
   const router = createRouter();
   registerAuthRoutes(router, repository);
@@ -74,6 +81,7 @@ export function createApiRouter({ repository, paymentGateway } = {}) {
       repository,
       user.sub,
       request.body,
+      clock,
     );
     sendJson(response, 201, booking);
   });
@@ -96,6 +104,7 @@ export function createApiRouter({ repository, paymentGateway } = {}) {
       reference,
       request.body ?? {},
       paymentGateway,
+      clock,
     );
     sendJson(response, 200, booking);
   });
@@ -106,8 +115,37 @@ export function createApiRouter({ repository, paymentGateway } = {}) {
       repository,
       user.sub,
       reference,
+      refundGateway,
+      clock,
     );
     sendJson(response, 200, booking);
+  });
+
+  router.add('GET', '/api/bookings/:reference/refund', async (request, response, { reference }) => {
+    const user = requireRole('attendee')(request);
+    sendJson(response, 200, await bookingService.previewBookingRefund(
+      repository,
+      user.sub,
+      reference,
+      clock,
+    ));
+  });
+
+  router.add('POST', '/api/waitlist', async (request, response) => {
+    const user = requireRole('attendee')(request);
+    const entry = await waitlistService.joinWaitlist(repository, user.sub, request.body, clock);
+    sendJson(response, 201, entry);
+  });
+
+  router.add('GET', '/api/waitlist/offers', async (request, response) => {
+    const user = requireRole('attendee')(request);
+    sendJson(response, 200, await waitlistService.listOffers(repository, user.sub, clock));
+  });
+
+  router.add('POST', '/api/waitlist/offers/:id/accept', async (request, response, { id }) => {
+    const user = requireRole('attendee')(request);
+    const booking = await waitlistService.acceptOffer(repository, user.sub, id, clock);
+    sendJson(response, 201, booking);
   });
 
   return router;
