@@ -12,6 +12,7 @@ import {
 } from './seatService.js';
 import { charge as defaultCharge, refund as defaultRefund } from '../lib/mockPaymentGateway.js';
 import { systemClock } from '../lib/clock.js';
+import { signTicketToken } from '../lib/ticketToken.js';
 
 const MAX_TICKETS_PER_BOOKING = 10;
 
@@ -258,5 +259,9 @@ export async function getBooking(repository, userId, reference) {
 export async function listBookings(repository, userId) {
   const attendeeId = requireUserId(userId);
   const store = await loadDomainStore(repository);
-  return [...store.bookings.values()].filter((booking) => booking.userId === attendeeId);
+  return [...store.bookings.values()]
+    .filter((booking) => booking.userId === attendeeId)
+    .map((booking) => booking.status === 'paid'
+      ? { ...booking, ticketToken: signTicketToken(booking.reference) }
+      : booking);
 }

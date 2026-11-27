@@ -6,6 +6,8 @@ import { systemClock } from '../lib/clock.js';
 import { createRouter } from './router.js';
 import { requireRole } from './guards.js';
 import { registerAuthRoutes } from '../routes/auth.js';
+import * as checkinService from '../services/checkinService.js';
+import { createRateLimiter } from '../lib/rateLimit.js';
 
 function sendJson(response, statusCode, value) {
   response.writeHead(statusCode, { 'content-type': 'application/json; charset=utf-8' });
@@ -33,10 +35,12 @@ export function createApiRouter({
   paymentGateway,
   refundGateway,
   clock = systemClock,
+  loginRateLimiter = createRateLimiter({ limit: 5, windowMs: 15 * 60_000 }),
+  checkinRateLimiter = createRateLimiter({ limit: 30, windowMs: 60_000 }),
 } = {}) {
   if (!repository) throw new DomainError('VALIDATION', 'A repository is required');
   const router = createRouter();
-  registerAuthRoutes(router, repository);
+  registerAuthRoutes(router, repository, loginRateLimiter);
 
   router.add('POST', '/api/events', async (request, response) => {
     const user = requireRole('organizer')(request);
@@ -89,6 +93,29 @@ export function createApiRouter({
   router.add('GET', '/api/bookings', async (request, response) => {
     const user = requireRole('attendee')(request);
     sendJson(response, 200, await bookingService.listBookings(repository, user.sub));
+  });
+
+  router.add('POST', '/api/checkin', async (request, response) => {
+    if (!checkinRateLimiter.allow(request.socket?.remoteAddress ?? 'unknown')) {
+      throw new DomainError('RATE_LIMITED', 'Too many check-in attempts. Try again later.');
+    }
+    requireRole('staff')(request);
+    const result = await checkinService.checkIn(repository, request.body?.code, clock);
+    if (result.kind === 'duplicate') {
+      sendJson(response, 409, {
+        error: {
+          code: 'DUPLICATE_SCAN',
+          message: 'This ticket has already been checked in',
+          checkedInAt: result.checkedInAt,
+        },
+      });
+      return;
+    }
+    sendJson(response, 200, {
+      admitted: true,
+      bookingReference: result.reference,
+      checkedInAt: result.checkedInAt,
+    });
   });
 
   router.add('GET', '/api/bookings/:reference', async (request, response, { reference }) => {

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ticket check-in</title>
+    <link rel="stylesheet" href="/css/styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/index.html">Event Ticketing</a>
+      <nav class="header-nav">
+        <a class="back-link" href="/index.html">Events</a>
+        <button id="logout" type="button" class="text-button">Log out</button>
+      </nav>
+    </header>
+    <main class="page-shell">
+      <h1>Ticket check-in</h1>
+      <p>Paste a ticket code or scan it with a QR scanner.</p>
+      <form id="checkin-form" class="auth-card">
+        <div class="field">
+          <label for="ticket-code">Ticket code</label>
+          <textarea id="ticket-code" name="code" rows="4" required autocomplete="off"></textarea>
+        </div>
+        <button id="checkin-submit" class="primary-button" type="submit">Check in ticket</button>
+        <p id="checkin-result" role="status" aria-live="polite"></p>
+      </form>
+    </main>
+    <script type="module" src="/js/pages/checkin.js"></script>
+  </body>
+</html>

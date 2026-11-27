@@ -7,6 +7,7 @@ import { charge } from '../src/lib/mockPaymentGateway.js';
 import { signToken } from '../src/lib/token.js';
 
 process.env.TOKEN_SECRET = 'test-build-7-secret';
+process.env.TICKET_TOKEN_SECRET = 'test-ticket-build-9-secret';
 
 describe('in-memory REST API', () => {
   const repository = createMemoryRepository();

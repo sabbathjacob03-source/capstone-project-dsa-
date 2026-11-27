@@ -21,6 +21,10 @@ describe('HTTP app', () => {
     const response = await fetch(`${baseUrl}/health`);
     assert.equal(response.status, 200);
     assert.equal(response.headers.get('content-type'), 'application/json; charset=utf-8');
+    assert.match(response.headers.get('content-security-policy'), /script-src 'self'/);
+    assert.doesNotMatch(response.headers.get('content-security-policy'), /unsafe-inline/);
+    assert.equal(response.headers.get('x-content-type-options'), 'nosniff');
+    assert.equal(response.headers.get('referrer-policy'), 'strict-origin-when-cross-origin');
     assert.deepEqual(await response.json(), { status: 'ok' });
   });
 

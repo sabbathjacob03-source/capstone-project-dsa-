@@ -39,13 +39,18 @@ The server listens on port `3000` by default. Set the `PORT` environment
 variable to use another valid port. The health endpoint is available at
 `http://localhost:3000/health`.
 
-Authentication requires a secret for signed bearer tokens. Set `TOKEN_SECRET`
-before starting the server:
+Authentication and ticket check-in require two different secrets. Set both
+`TOKEN_SECRET` and `TICKET_TOKEN_SECRET` before starting the server; the
+application does not load `.env` files automatically:
 
 ```powershell
-$env:TOKEN_SECRET="a-long-random-secret"
+$env:TOKEN_SECRET="a-long-random-login-secret"
+$env:TICKET_TOKEN_SECRET="a-different-long-random-ticket-secret"
 npm start
 ```
+
+Use unique random values locally and never commit them. `.env.example` contains
+placeholders, not usable secrets.
 
 ## Current features
 
@@ -58,6 +63,8 @@ npm start
 - Atomic ticket reservations that prevent overselling.
 - Time-based refunds, expiring bookings, and FIFO waitlist offers with reserved seats.
 - Authenticated attendee cancellation and waitlist workflows in the website.
+- Signed paid-ticket codes, staff-only check-in, security headers, and request
+  rate limits.
 - Automated tests using `node:test` and `node:assert/strict`.
 
 ## Build roadmap
@@ -88,7 +95,8 @@ See [milestones.md](./docs/milestones.md) for the high-level roadmap,
 [build-4.md](./docs/build-4.md) for Build 4, [build-5.md](./docs/build-5.md)
 for Build 5, [build-6.md](./docs/build-6.md) for Build 6, and
 [build-7.md](./docs/build-7.md) for Build 7, and
-[build-8.md](./docs/build-8.md) for Build 8.
+[build-8.md](./docs/build-8.md) for Build 8, and
+[build-9.md](./docs/build-9.md) for Build 9.
 
 ## Project layout
 

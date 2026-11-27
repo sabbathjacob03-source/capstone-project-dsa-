@@ -6,6 +6,7 @@ import { createMemoryRepository } from '../src/repositories/memory.js';
 import { signToken } from '../src/lib/token.js';
 
 process.env.TOKEN_SECRET = 'build-7-test-secret';
+process.env.TICKET_TOKEN_SECRET = 'build-9-ticket-test-secret';
 
 describe('Build 7 authentication and authorization', () => {
   const repository = createMemoryRepository();

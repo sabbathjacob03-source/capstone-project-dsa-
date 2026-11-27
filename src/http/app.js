@@ -4,6 +4,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { DomainError } from '../domain/errors.js';
 import { createRouter } from './router.js';
+import { applySecurityHeaders } from './securityHeaders.js';
 
 const DEFAULT_PUBLIC_DIR = fileURLToPath(new URL('../../public/', import.meta.url));
 const MAX_JSON_BODY_BYTES = 1_048_576;
@@ -29,12 +30,18 @@ function sendError(response, statusCode, code, message) {
 
 function statusFor(error) {
   if (error instanceof DomainError) {
-    if (error.code === 'VALIDATION' || error.code === 'INVALID_JSON') return 400;
+    if (
+      error.code === 'VALIDATION' ||
+      error.code === 'INVALID_JSON' ||
+      error.code === 'INVALID'
+    ) return 400;
     if (error.code === 'NOT_FOUND') return 404;
     if (error.code === 'PAYLOAD_TOO_LARGE') return 413;
     if (error.code === 'UNAUTHENTICATED') return 401;
     if (error.code === 'INVALID_CREDENTIALS') return 401;
     if (error.code === 'FORBIDDEN') return 403;
+    if (error.code === 'RATE_LIMITED') return 429;
+    if (error.code === 'DUPLICATE_SCAN') return 409;
     if (error.code === 'EMAIL_TAKEN') return 409;
     if (error.code === 'PAYMENT_DECLINED') return 402;
     if (error.code === 'REFUND_FAILED') return 502;
@@ -141,6 +148,7 @@ export function createApp({ router = createRouter(), publicDir = DEFAULT_PUBLIC_
   });
 
   return createServer(async (request, response) => {
+    applySecurityHeaders(response);
     try {
       await parseJsonBody(request);
       const url = new URL(request.url, 'http://localhost');
