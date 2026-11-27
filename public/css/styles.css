@@ -47,6 +47,17 @@ input, select {
   color: #17213a;
   font: inherit;
 }
+textarea {
+  width: 100%;
+  min-height: 100px;
+  border: 1px solid #dce0ea;
+  border-radius: 9px;
+  background: #fff;
+  padding: 10px 12px;
+  color: #17213a;
+  font: inherit;
+}
+textarea:focus { outline: 3px solid rgba(112,87,217,.15); border-color: #7057d9; }
 input:focus, select:focus { outline: 3px solid rgba(112,87,217,.15); border-color: #7057d9; }
 .results-count { min-height: 24px; color: #69728a; }
 .event-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; }
@@ -104,10 +115,12 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 .ticket-list { display: grid; gap: 12px; }
 .ticket-card { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; padding: 18px; background: #fff; border: 1px solid #e8ebf2; border-radius: 14px; }
 .ticket-card p { margin: 4px 0 0; color: #69728a; }
+.ticket-qr { width: 196px; height: 196px; justify-self: center; image-rendering: pixelated; }
 .tier-form { grid-column: 1/-1; display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 8px; }
 .organizer-page { max-width: 800px; }
 .waitlist-button { grid-column: 1/-1; justify-self: start; }
 .offer-countdown { margin: 4px 0 0; color: #765800; font-weight: 700; }
+.checkin-success { color: #217348; font-weight: 700; }
 @media (max-width:900px) {
   .filter-panel { grid-template-columns: 1fr 1fr; }
   .event-grid { grid-template-columns: 1fr 1fr; }

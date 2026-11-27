@@ -7,6 +7,7 @@ import {
 } from '../api.js';
 import { clearSession, getSessionUser } from '../session.js';
 import { el, formatPrice } from '../ui.js';
+import { toCanvas } from '../qr.js';
 
 const status = document.querySelector('#tickets-status');
 const container = document.querySelector('#tickets');
@@ -33,6 +34,13 @@ function bookingCard(booking) {
       el('span', { textContent: formatPrice(booking.amountCents) }),
     ]),
   ]);
+  if (booking.status === 'paid') {
+    const qrCode = el('canvas', { className: 'ticket-qr' });
+    qrCode.setAttribute('role', 'img');
+    qrCode.setAttribute('aria-label', `QR code for ticket ${booking.reference}`);
+    toCanvas(qrCode, booking.ticketToken);
+    card.appendChild(qrCode);
+  }
   if (booking.status === 'pending' || booking.status === 'paid') {
     const button = el('button', {
       type: 'button',

@@ -117,6 +117,17 @@ export function createMemoryRepository() {
         return booking;
       });
     },
+    async checkInBooking(reference, checkedInAt) {
+      return bookings.mutateByReference(reference, (booking) => {
+        if (booking.status === 'checked_in') {
+          return { kind: 'duplicate', checkedInAt: booking.checkedInAt };
+        }
+        if (booking.status !== 'paid') return undefined;
+        booking.status = 'checked_in';
+        booking.checkedInAt = checkedInAt;
+        return { kind: 'admitted', reference, checkedInAt };
+      });
+    },
     async restoreRefundClaim(reference, userId) {
       return bookings.mutateByReference(reference, (booking) => {
         if (booking.userId !== userId || booking.status !== 'refunding') return false;

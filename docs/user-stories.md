@@ -56,8 +56,8 @@ delivers it.
 | S11 | [build-8.md](./build-8.md) |
 | S12 | [build-8.md](./build-8.md) |
 | S13 | [build-7.md](./build-7.md) |
-| S14 | Build 9 guide (planned) |
-| S15 | Build 9 guide (planned) |
+| S14 | [build-9.md](./build-9.md) |
+| S15 | [build-9.md](./build-9.md) |
 | S16 | [build-2.md](./build-2.md) |
 
 ## Definition of done (every story)

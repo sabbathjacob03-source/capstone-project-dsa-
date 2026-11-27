@@ -16,6 +16,7 @@ async function request(path, options = {}) {
     if (response.status === 401 && token) clearSession();
     const error = new Error(value.error?.message ?? 'The request failed');
     error.code = value.error?.code;
+    error.checkedInAt = value.error?.checkedInAt;
     throw error;
   }
   return value;
@@ -68,6 +69,10 @@ export function createBooking(input) {
 
 export function listBookings() {
   return request('/api/bookings');
+}
+
+export function checkInTicket(code) {
+  return request('/api/checkin', { method: 'POST', body: { code } });
 }
 
 export function getBooking(reference) {

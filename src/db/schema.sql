@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS bookings (
   created_at TEXT NOT NULL,
   hold_expires_at TEXT,
   refund_amount_cents INTEGER CHECK (refund_amount_cents IS NULL OR refund_amount_cents >= 0),
+  checked_in_at TEXT,
   FOREIGN KEY (user_id) REFERENCES users(id),
   FOREIGN KEY (event_id) REFERENCES events(id),
   FOREIGN KEY (tier_id, event_id) REFERENCES ticket_tiers(id, event_id)

@@ -4,9 +4,17 @@ import { config } from './config.js';
 import { createSqliteRepository } from './repositories/sqlite.js';
 import { runMaintenance } from './jobs/maintenance.js';
 
-if (![process.env.TOKEN_SECRET, process.env.JWT_SECRET, process.env.AUTH_SECRET]
-  .some((secret) => typeof secret === 'string' && secret.trim() !== '')) {
+const loginSecret = [process.env.TOKEN_SECRET, process.env.JWT_SECRET, process.env.AUTH_SECRET]
+  .find((secret) => typeof secret === 'string' && secret.trim() !== '');
+if (!loginSecret) {
   throw new Error('Set TOKEN_SECRET before starting the server');
+}
+if (typeof process.env.TICKET_TOKEN_SECRET !== 'string' ||
+  process.env.TICKET_TOKEN_SECRET.trim() === '') {
+  throw new Error('Set TICKET_TOKEN_SECRET before starting the server');
+}
+if (process.env.TICKET_TOKEN_SECRET === loginSecret) {
+  throw new Error('TICKET_TOKEN_SECRET must be different from the login-token secret');
 }
 
 const repository = createSqliteRepository();

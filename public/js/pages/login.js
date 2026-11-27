@@ -40,11 +40,7 @@ form.addEventListener('submit', async (event) => {
     if (mode === 'signup') input.role = form.elements.role.value;
     const session = mode === 'signup' ? await signup(input) : await login(input);
     setSession(session);
-    window.location.href = session.user.role === 'organizer'
-      ? '/organizer.html'
-      : session.user.role === 'attendee'
-        ? '/tickets.html'
-        : '/index.html';
+    window.location.href = pageForRole(session.user.role);
   } catch (error) {
     errorElement.textContent = error.message;
     errorElement.hidden = false;
@@ -56,9 +52,12 @@ form.addEventListener('submit', async (event) => {
 
 const user = getSessionUser();
 if (user) {
-  window.location.href = user.role === 'organizer'
-    ? '/organizer.html'
-    : user.role === 'attendee'
-      ? '/tickets.html'
-      : '/index.html';
+  window.location.href = pageForRole(user.role);
+}
+
+function pageForRole(role) {
+  if (role === 'organizer') return '/organizer.html';
+  if (role === 'attendee') return '/tickets.html';
+  if (role === 'staff') return '/checkin.html';
+  return '/index.html';
 }

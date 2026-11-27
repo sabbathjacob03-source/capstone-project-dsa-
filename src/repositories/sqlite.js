@@ -38,6 +38,7 @@ function bookingFromRow(row) {
     createdAt: row.created_at,
     holdExpiresAt: row.hold_expires_at,
     refundAmountCents: row.refund_amount_cents,
+    checkedInAt: row.checked_in_at,
   };
 }
 
@@ -196,8 +197,8 @@ export function createSqliteRepository({ databasePath } = {}) {
       database.prepare(`
         INSERT INTO bookings (
           id, reference, user_id, event_id, tier_id, quantity, amount_cents, status, created_at,
-          hold_expires_at, refund_amount_cents
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          hold_expires_at, refund_amount_cents, checked_in_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(id) DO UPDATE SET
           reference = excluded.reference,
           user_id = excluded.user_id,
@@ -208,7 +209,8 @@ export function createSqliteRepository({ databasePath } = {}) {
           status = excluded.status,
           created_at = excluded.created_at,
           hold_expires_at = excluded.hold_expires_at,
-          refund_amount_cents = excluded.refund_amount_cents
+          refund_amount_cents = excluded.refund_amount_cents,
+          checked_in_at = excluded.checked_in_at
       `).run(
         booking.id,
         booking.reference,
@@ -221,6 +223,7 @@ export function createSqliteRepository({ databasePath } = {}) {
         booking.createdAt,
         booking.holdExpiresAt ?? null,
         booking.refundAmountCents ?? null,
+        booking.checkedInAt ?? null,
       );
       return booking;
     },
@@ -364,6 +367,20 @@ export function createSqliteRepository({ databasePath } = {}) {
       const result = saveBookingStatus.run(nextStatus, null, reference, userId, expectedStatus);
       if (Number(result.changes) !== 1) return undefined;
       return bookingFromRow(bookingByReference.get(reference));
+    },
+    checkInBooking(reference, checkedInAt) {
+      const admitted = database.prepare(`
+        UPDATE bookings SET status = 'checked_in', checked_in_at = ?
+        WHERE reference = ? AND status = 'paid'
+      `).run(checkedInAt, reference);
+      if (Number(admitted.changes) === 1) {
+        return { kind: 'admitted', reference, checkedInAt };
+      }
+      const booking = bookingByReference.get(reference);
+      if (booking?.status === 'checked_in') {
+        return { kind: 'duplicate', checkedInAt: booking.checked_in_at };
+      }
+      return undefined;
     },
     restoreRefundClaim(reference, userId) {
       const result = saveBookingStatus.run('paid', null, reference, userId, 'refunding');

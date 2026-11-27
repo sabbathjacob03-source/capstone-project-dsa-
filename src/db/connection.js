@@ -33,6 +33,7 @@ export function openDatabase(databasePath = DEFAULT_DATABASE_PATH) {
           created_at TEXT NOT NULL,
           hold_expires_at TEXT,
           refund_amount_cents INTEGER CHECK (refund_amount_cents IS NULL OR refund_amount_cents >= 0),
+          checked_in_at TEXT,
           FOREIGN KEY (user_id) REFERENCES users(id),
           FOREIGN KEY (event_id) REFERENCES events(id),
           FOREIGN KEY (tier_id, event_id) REFERENCES ticket_tiers(id, event_id)
@@ -58,6 +59,9 @@ export function openDatabase(databasePath = DEFAULT_DATABASE_PATH) {
     }
     if (!bookingColumns.has('refund_amount_cents')) {
       database.exec('ALTER TABLE bookings ADD COLUMN refund_amount_cents INTEGER');
+    }
+    if (!bookingColumns.has('checked_in_at')) {
+      database.exec('ALTER TABLE bookings ADD COLUMN checked_in_at TEXT');
     }
   }
   const userColumns = new Set(database.prepare('PRAGMA table_info(users)').all().map((column) => column.name));
